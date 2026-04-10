@@ -1,9 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { EditorFont } from "@/hooks/useEditorFont";
 import { useCoverImage } from "@/hooks/useCoverImage";
-import { fontFamilies } from "@/lib/editorFont";
 import {
   BlockNoteEditor,
   PartialBlock,
@@ -22,7 +20,6 @@ interface EditorProps {
   onChange: (value: string) => void;
   initialContent?: string;
   editable?: boolean;
-  editorFont?: string;
   onEditorReady?: (editor: BlockNoteEditor) => void;
 }
 
@@ -69,7 +66,6 @@ const Editor = ({
   onChange,
   initialContent,
   editable = true,
-  editorFont,
   onEditorReady,
 }: EditorProps) => {
   const { resolvedTheme } = useTheme();
@@ -166,11 +162,6 @@ const Editor = ({
     <div
       ref={wrapperRef}
       className="relative flex-1 shrink-0 pb-10"
-      style={
-        {
-          "--editor-font": fontFamilies[editorFont as EditorFont],
-        } as React.CSSProperties
-      }
       onDropCapture={handleCapture}
       onDragOverCapture={handleCapture}
       onMouseDown={handleMouseDown}

@@ -13,7 +13,7 @@ import { Id } from "@/convex/_generated/dataModel";
 import { useMutation, useQuery } from "convex/react";
 import { BlockNoteEditor } from "@blocknote/core";
 import { TableOfContents } from "@/components/table-of-contents";
-import { useEditorFont } from "@/hooks/useEditorFont";
+
 
 interface DocumentIdPageProps {
   params: Promise<{
@@ -34,8 +34,6 @@ const DocumentIdPage = ({ params }: DocumentIdPageProps) => {
   const doc = useQuery(api.documents.getById, {
     documentId: documentId,
   });
-
-  const { editorFont, isFontLoading } = useEditorFont({ enabled: true });
 
   const update = useMutation(api.documents.update);
 
@@ -62,17 +60,7 @@ const DocumentIdPage = ({ params }: DocumentIdPageProps) => {
     };
   }, [doc, resolvedTheme, documentId]);
 
-  useEffect(() => {
-    if (!doc) return;
-    if (doc.editorFont === editorFont) return;
 
-    update({
-      id: documentId,
-      editorFont,
-    });
-  }, [doc, editorFont, documentId, update]);
-
-  const activeFont = doc?.editorFont ?? editorFont;
 
   const onChange = (content: string) => {
     update({
@@ -81,7 +69,7 @@ const DocumentIdPage = ({ params }: DocumentIdPageProps) => {
     });
   };
 
-  if (doc === undefined || isFontLoading) {
+  if (doc === undefined) {
     return (
       <div>
         <Cover.Skeleton />
@@ -105,12 +93,11 @@ const DocumentIdPage = ({ params }: DocumentIdPageProps) => {
     <div className="pb-35">
       <Cover url={doc.coverImage} />
       <div className="relative mx-auto md:w-[90%]">
-        <Toolbar initialData={doc} editorFont={activeFont} />
+        <Toolbar initialData={doc} />
         <Editor
           onChange={onChange}
           initialContent={doc.content}
           onEditorReady={setEditor}
-          editorFont={activeFont}
         />
         <TableOfContents editor={editor} />
       </div>
