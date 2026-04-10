@@ -2,10 +2,10 @@ import { initEdgeStore } from "@edgestore/server";
 import { createEdgeStoreNextHandler } from "@edgestore/server/adapters/next/app";
 import { auth, currentUser } from "@clerk/nextjs/server";
 
-const es = initEdgeStore.create({
-  accessKey: process.env.EDGE_STORE_ACCESS_KEY || "fallback_access_key",
-  secretKey: process.env.EDGE_STORE_SECRET_KEY || "fallback_secret_key",
-});
+if (!process.env.EDGE_STORE_ACCESS_KEY) process.env.EDGE_STORE_ACCESS_KEY = "fallback_access_key";
+if (!process.env.EDGE_STORE_SECRET_KEY) process.env.EDGE_STORE_SECRET_KEY = "fallback_secret_key";
+
+const es = initEdgeStore.create();
 
 const edgeStoreRouter = es.router({
   publicFiles: es
